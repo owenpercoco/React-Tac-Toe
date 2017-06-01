@@ -25,10 +25,18 @@
 body{
 	background: #CFF7F9;
 }
+.O{
+	color:#031926 !important;
+}
+
+.X{
+	color: #FF715B !important; 
+}
 .status{
 	padding:25px;
 	font-size:20px;
 	text-transform:uppercase;
+	font-weight:900;
 }
 .square{
 	-webkit-transition-duration: .5s; /* Safari */
@@ -42,12 +50,9 @@ body{
 }
 .board-value{
 	font-size:38px;
-	color: #FF715B;
 	display:inherit;
+	color:white;
 }
 .board-row{
 	height:100px;
-}
-.O{
-	color:#031926;
 }

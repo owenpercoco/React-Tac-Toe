@@ -6,9 +6,10 @@ import './App.css';
 class Square extends React.Component {
 
   render() {
+	var _class ='board-value ' + this.props.value;
     return (
       <button className="square" onClick={() => this.props.onClick()}>
-		<span className={'board-value {this.props.value}'}>
+		<span className={_class}>
 			{this.props.value}
 		</span>
       </button>
@@ -46,7 +47,17 @@ class Board extends React.Component {
       />
     );
   }
- 
+  computerMove(){
+	  console.log('in computer method');
+	  for(var i = 0; i < this.state.squares.length; i++) {
+		for(var j = 0; j < this.state.squares[i].length; j++) {
+			if(this.state.squares[i][j] === '-'){
+				this.handleClick(i, j);
+				return
+			}
+	    }
+	  }
+  }
   render() {
 	const winner = calculateWinner(this.state.squares, this.state.playerTurn);
     let status;
@@ -56,7 +67,9 @@ class Board extends React.Component {
       status = (this.state.playerTurn ? 'Player turn' : '...thinking');
     }
 
-
+	if(this.state.playerTurn != true){
+		this.computerMove();
+	}
     return (
       <div className="container">
 	  <div className="row">
@@ -109,7 +122,7 @@ ReactDOM.render(
   document.getElementById('root')
 );
 function calculateWinner(squares, player) {
-	  console.log(squares);
+	
 	  var status = (player ? 'better luck next time' : 'You won!');
 	  if (squares[0][0] === squares[1][1] && squares[0][0] === squares[2][2] && squares[0][0] !== '-') {
 			console.log('thats a diagonal win');
