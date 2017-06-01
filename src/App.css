@@ -25,10 +25,17 @@
 body{
 	background: #CFF7F9;
 }
+.status{
+	padding:25px;
+	font-size:20px;
+	text-transform:uppercase;
+}
 .square{
+	-webkit-transition-duration: .5s; /* Safari */
+    transition-duration: .5s;
 	height: 100px;
     width: 100px;
-    border: 2px solid #BCEd09;
+    border: 2px solid #77ACA2;
     background: white;
     border-radius: 10px;
     padding: 5px;
@@ -40,4 +47,7 @@ body{
 }
 .board-row{
 	height:100px;
+}
+.O{
+	color:#031926;
 }
