@@ -57,12 +57,24 @@ class Board extends React.Component {
 class Score extends React.Component{
 
   render(){
-	  return(
-	  <div>
-		  <span>Player: {this.props.playerScore}</span>
-		  <span>Computer:  {this.props.computerScore}</span>
-	  </div>
+	  if (this.props.playerScore > this.props.computerScore){
+		return(
+		  <div>
+			  <span  className="winning">Player: {this.props.playerScore}</span>
+			  <span>Computer:  {this.props.computerScore}</span>
+			  <span>Ties: {this.props.ties}</span>
+		  </div>
+	  )  
+	  }else{
+		  return(
+		  <div>
+			  <span>Player: {this.props.playerScore}</span>
+			  <span className="winning">Computer:  {this.props.computerScore}</span>
+			  <span>Ties: {this.props.ties}</span>
+		  </div>
 	  )
+	  }
+	  
   }
 }
 
@@ -77,20 +89,33 @@ class Game extends React.Component {
 	  playerTurn: true,
 	  playerScore: 0,
 	  computerScore: 0,
+	  ties: 0,
     };
   }
   computerMove(){
+	if(calculateWinner(this.state.squares) === 'tie'){
+		return
+	}
+	setTimeout(function(){ 
 	  console.log('in computer method');
-	  
-	  for(var i = 0; i < this.state.squares.length; i++) {
-		for(var j = 0; j < this.state.squares[i].length; j++) {
-			if(this.state.squares[i][j] === '-'){
-					this.handleClick(i, j);
-				return
-			}
-	    }
+	  var x = Math.floor(Math.random() * 3);
+	  var y = Math.floor(Math.random() * 3);
+	  while( calculateWinner(this.state.squares) === false && this.state.squares[x][y] !== '-'){
+		  x = Math.floor(Math.random() * 3);
+		  y = Math.floor(Math.random() * 3);
+		  console.log('is this an infinite loop...?');
 	  }
+	    if(calculateWinner(this.state.squares)){
+			return
+		}
+			
+		this.handleClick(x, y);
+				return
+			
+	    
+	  }.bind(this), 1500);
   }
+  
   handleClick(i, j) {
     const squares = this.state.squares.slice();
 	if (calculateWinner(this.state.squares) || this.state.squares[i][j] !== '-') {
@@ -112,7 +137,11 @@ class Game extends React.Component {
 	const winner = calculateWinner(this.state.squares, this.state.playerTurn);
     let status;
     if (winner) {
-	  this.state.playerTurn ? this.state.computerScore+=1 : this.state.playerScore += 1;
+	  if (winner == 'tie'){
+		  this.state.ties += 1;
+	  }else{
+		  this.state.playerTurn ? this.state.computerScore+=1 : this.state.playerScore += 1;
+	  }
 	  console.log(this.state.playerScore);
       status = winner;
 	  
@@ -141,7 +170,8 @@ class Game extends React.Component {
 	<div className="row">
         <div className="game-info">
           <Score playerScore = {this.state.playerScore}
-		         computerScore = {this.state.computerScore}/>
+		         computerScore = {this.state.computerScore}
+				 ties = {this.state.ties}/>
 		  <button onClick={() => this.resetBoard()} >Reset Board </button>
         </div>
       </div>
@@ -175,6 +205,17 @@ function calculateWinner(squares, player) {
 			console.log('thats a vertical win');
 			return status;
 		}
+	}
+	var spaces = false;
+	for (var i = 0; i <squares.length; i++) {
+        for(var j = 0; j < squares[i].length; j++){
+			if (squares[i][j] == '-'){
+				spaces = true;
+			}
+		}
+	}
+	if(spaces === false){
+		return 'tie';
 	}
 	  return false;
 	  

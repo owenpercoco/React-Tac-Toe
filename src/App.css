@@ -58,7 +58,19 @@ body{
 }
 .game-info{
 	padding:25px;
+	font-size:25px;
+	text-transform:uppercase;
 }
 .game-info span{	
 	display:block;
 }
+.winning:after{
+   content: '\f001';
+   color: #FF715B;
+   font-family: FontAwesome;
+   font-weight: normal;
+   font-style: normal;
+   margin:0px 0px 0px 10px;
+   text-decoration:none;
+
+} 
