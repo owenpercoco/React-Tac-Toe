@@ -92,11 +92,44 @@ class Game extends React.Component {
 	  ties: 0,
     };
   }
+  //calculates the computers move by generating possible places where X can win and then preventing that, in theory
   computerMove(){
 	if(calculateWinner(this.state.squares) === 'tie'){
 		return
 	}
 	setTimeout(function(){ 
+	  var squares = JSON.parse(JSON.stringify(this.state.squares));
+	  var moved = false;
+	  console.log('in computer method');
+	  for(var x = 0; x < squares.length; x++){
+		  for(var y = 0; y < squares[x].length; y++){
+			  console.log(this.state.squares);
+			  if(squares[x][y] === '-'){
+				  squares[x][y] = 'X';
+				  if(potentialWinner(squares)){
+					console.log('in the winning if');
+					this.handleClick(x, y);
+					return
+				   }else{
+					squares[x][y] = '-';  
+				  }
+			  }
+		  }
+	  }
+	   
+		this._computerMove();
+		
+		return
+			
+	    
+	  }.bind(this), 750);
+  }
+  _computerMove(){
+	if(calculateWinner(this.state.squares) === 'tie'){
+		return
+	}
+	setTimeout(function(){ 
+	  var squares = this.state.squares;
 	  console.log('in computer method');
 	  var x = Math.floor(Math.random() * 3);
 	  var y = Math.floor(Math.random() * 3);
@@ -113,10 +146,11 @@ class Game extends React.Component {
 				return
 			
 	    
-	  }.bind(this), 1500);
+	  }.bind(this), 750);
   }
   
   handleClick(i, j) {
+	console.log('clickety click called');
     const squares = this.state.squares.slice();
 	if (calculateWinner(this.state.squares) || this.state.squares[i][j] !== '-') {
       return;
@@ -137,12 +171,12 @@ class Game extends React.Component {
 	const winner = calculateWinner(this.state.squares, this.state.playerTurn);
     let status;
     if (winner) {
-	  if (winner == 'tie'){
+	  if (winner === 'tie'){
 		  this.state.ties += 1;
 	  }else{
-		  this.state.playerTurn ? this.state.computerScore+=1 : this.state.playerScore += 1;
+		  this.state.playerTurn ? this.state.computerScore+=1 : this.state.playerScore += 1;  //im mutating state directly here and above, it throws a warning.  Will fix
 	  }
-	  console.log(this.state.playerScore);
+	  
       status = winner;
 	  
     } else {
@@ -220,6 +254,33 @@ function calculateWinner(squares, player) {
 	  return false;
 	  
 }
-
+function potentialWinner(squares) {
+	  if (squares[0][0] === squares[1][1] && squares[0][0] === squares[2][2] && squares[0][0] !== '-') {
+			return true;
+	  }else if (squares[0][2] === squares[1][1] && squares[1][1] === squares[2][0] && squares[2][0] !== '-') {
+			return true;
+	  }
+	  for(var i = 0; i < squares.length; i++) {
+		if (squares[i][0] === squares[i][1] && squares[i][1] === squares[i][2] && squares[i][1] !== '-') {
+			return true;
+		}
+		if (squares[0][i] === squares[1][i] && squares[1][i] === squares[2][i] && squares[0][i] !== '-') {
+			return true;
+		}
+	}
+	var spaces = false;
+	for (var i = 0; i <squares.length; i++) {
+        for(var j = 0; j < squares[i].length; j++){
+			if (squares[i][j] == '-'){
+				spaces = true;
+			}
+		}
+	}
+	if(spaces === false){
+		return true;
+	}
+	  return false;
+	  
+}
 export default Game;
 
