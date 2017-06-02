@@ -192,7 +192,7 @@ function calculateWinner(squares, player) {
 	  if (squares[0][0] === squares[1][1] && squares[0][0] === squares[2][2] && squares[0][0] !== '-') {
 			console.log('thats a diagonal win');
 			return status;
-	  }else if (squares[0][2] === squares[1][1] && squares[1][1] === squares[2][2] && squares[2][0] !== '-') {
+	  }else if (squares[0][2] === squares[1][1] && squares[1][1] === squares[2][0] && squares[2][0] !== '-') {
 			console.log('thats a diagonal win');
 			return status;
 	  }
