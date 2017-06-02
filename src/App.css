@@ -56,3 +56,9 @@ body{
 .board-row{
 	height:100px;
 }
+.game-info{
+	padding:25px;
+}
+.game-info span{	
+	display:block;
+}

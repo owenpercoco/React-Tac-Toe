@@ -18,65 +18,22 @@ class Square extends React.Component {
 }
 
 class Board extends React.Component {
-   constructor() {
-    super();
-    this.state = {
-      squares:[['-', '-', '-'],
-			  ['-', '-', '-'],
-			  ['-', '-', '-']
-			],
-	  playerTurn: true,
-    };
-  }
-  handleClick(i, j) {
-    const squares = this.state.squares.slice();
-	if (calculateWinner(squares) || squares[i][j] != '-') {
-      return;
-    }
-    squares[i][j] = this.state.playerTurn ? 'X' : 'O';
-    this.setState({
-      squares: squares,
-      playerTurn: !this.state.playerTurn,
-    });
-  }
+   
   renderSquare(i, j) {
     return (
       <Square
-        value={this.state.squares[i][j]}
-        onClick={() => this.handleClick(i, j)}
+        value={this.props.squares[i][j]}
+        onClick={() => this.props.onClick(i, j)}
       />
     );
   }
-  computerMove(){
-	  console.log('in computer method');
-	  for(var i = 0; i < this.state.squares.length; i++) {
-		for(var j = 0; j < this.state.squares[i].length; j++) {
-			if(this.state.squares[i][j] === '-'){
-				this.handleClick(i, j);
-				return
-			}
-	    }
-	  }
-  }
+  
   render() {
-	const winner = calculateWinner(this.state.squares, this.state.playerTurn);
-    let status;
-    if (winner) {
-      status = winner;
-    } else {
-      status = (this.state.playerTurn ? 'Player turn' : '...thinking');
-    }
+	
 
-	if(this.state.playerTurn != true){
-		this.computerMove();
-	}
     return (
       <div className="container">
-	  <div className="row">
-	    <div className="col-md-12">
-        <div className="status">{status}</div>
-		</div>
-	  </div>
+	  
 			<div className="board-row">
 			  {this.renderSquare(0, 0)}
 			  {this.renderSquare(0, 1)}
@@ -97,20 +54,96 @@ class Board extends React.Component {
     );
   }
 }
+class Score extends React.Component{
+
+  render(){
+	  return(
+	  <div>
+		  <span>Player: {this.props.playerScore}</span>
+		  <span>Computer:  {this.props.computerScore}</span>
+	  </div>
+	  )
+  }
+}
 
 class Game extends React.Component {
-  
+  constructor() {
+    super();
+    this.state = {
+      squares:[['-', '-', '-'],
+			  ['-', '-', '-'],
+			  ['-', '-', '-']
+			],
+	  playerTurn: true,
+	  playerScore: 0,
+	  computerScore: 0,
+    };
+  }
+  computerMove(){
+	  console.log('in computer method');
+	  
+	  for(var i = 0; i < this.state.squares.length; i++) {
+		for(var j = 0; j < this.state.squares[i].length; j++) {
+			if(this.state.squares[i][j] === '-'){
+					this.handleClick(i, j);
+				return
+			}
+	    }
+	  }
+  }
+  handleClick(i, j) {
+    const squares = this.state.squares.slice();
+	if (calculateWinner(squares) || squares[i][j] !== '-') {
+      return;
+    }
+    squares[i][j] = this.state.playerTurn ? 'X' : 'O';
+    this.setState({
+      squares: squares,
+      playerTurn: !this.state.playerTurn,
+    });
+  }
+  resetBoard(){
+	  this.setState({
+      squares: [['-', '-', '-'],['-', '-', '-'],['-', '-', '-']]
+    });
+  }
   render() {
+	
+	const winner = calculateWinner(this.state.squares, this.state.playerTurn);
+    let status;
+    if (winner) {
+	  this.state.playerTurn ? this.state.computerScore+=1 : this.state.playerScore += 1;
+	  console.log(this.state.playerScore);
+      status = winner;
+	  
+    } else {
+      status = (this.state.playerTurn ? 'Player turn' : '...thinking');
+    }
+	if(this.state.playerTurn !== true){
+		this.computerMove();
+	}
     return (
+	<div className="row">
       <div className="game">
+	  <div className="row">
+	    <div className="col-md-12">
+        <div className="status">{status}</div>
+		</div>
+	  </div>
         <div className="game-board">
-          <Board />
+          <Board squares={this.state.squares}
+            onClick={(i, j) => this.handleClick(i, j)}
+			/>
         </div>
+	</div>
+	<div className="row">
         <div className="game-info">
-          <div>{/* status */}</div>
-          <ol>{/* TODO */}</ol>
+          <Score playerScore = {this.state.playerScore}
+		         computerScore = {this.state.computerScore}/>
+		  <button onClick={() => this.resetBoard()} >Reset Board </button>
         </div>
       </div>
+	</div>
     );
   }
 }
