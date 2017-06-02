@@ -32,7 +32,7 @@ class Board extends React.Component {
 	
 
     return (
-      <div className="container">
+      <div className=" ">
 	  
 			<div className="board-row">
 			  {this.renderSquare(0, 0)}
@@ -130,11 +130,13 @@ class Game extends React.Component {
         <div className="status">{status}</div>
 		</div>
 	  </div>
+	  <div className="row">
         <div className="game-board">
           <Board squares={this.state.squares}
             onClick={(i, j) => this.handleClick(i, j)}
 			/>
         </div>
+	   </div>
 	</div>
 	<div className="row">
         <div className="game-info">
