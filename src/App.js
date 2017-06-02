@@ -93,7 +93,7 @@ class Game extends React.Component {
   }
   handleClick(i, j) {
     const squares = this.state.squares.slice();
-	if (calculateWinner(squares) || squares[i][j] !== '-') {
+	if (calculateWinner(this.state.squares) || this.state.squares[i][j] !== '-') {
       return;
     }
     squares[i][j] = this.state.playerTurn ? 'X' : 'O';

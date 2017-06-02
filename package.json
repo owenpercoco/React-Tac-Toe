@@ -6,6 +6,10 @@
     "react": "^15.5.4",
     "react-dom": "^15.5.4"
   },
+  "engines": {
+      "node": "6.10.3",
+	  "nom":"3.10.10"
+  },
   "devDependencies": {
     "react-scripts": "1.0.7"
   },
