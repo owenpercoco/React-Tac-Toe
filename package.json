@@ -8,7 +8,7 @@
   },
   "engines": {
       "node": "6.10.3",
-	  "nom":"3.10.10"
+	  "npm":"3.10.10"
   },
   "devDependencies": {
     "react-scripts": "1.0.7"
