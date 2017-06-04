@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-
 import './App.css';
 
 class Square extends React.Component {
@@ -54,6 +53,7 @@ class Board extends React.Component {
     );
   }
 }
+//generates your scoreboard, adding a nice music note to whoever is winning.  If its tied, its still the computers win, because really if you aren't winning, the computer is.
 class Score extends React.Component{
 
   render(){
@@ -98,16 +98,14 @@ class Game extends React.Component {
 		return
 	}
 	setTimeout(function(){ 
-	  var squares = JSON.parse(JSON.stringify(this.state.squares));
-	  var moved = false;
-	  console.log('in computer method');
+	  var squares = JSON.parse(JSON.stringify(this.state.squares));  //source of a previous error, needed to make proper deep copy of array
+	  //basic idea of this loop is simple, we go through, and if it finds a place the player can win, it plays there.  It just prevents your victory, it doesn't actually seek out its own
 	  for(var x = 0; x < squares.length; x++){
 		  for(var y = 0; y < squares[x].length; y++){
-			  console.log(this.state.squares);
+			  
 			  if(squares[x][y] === '-'){
 				  squares[x][y] = 'X';
-				  if(potentialWinner(squares)){
-					console.log('in the winning if');
+				  if(calculateWinner(squares)){ 
 					this.handleClick(x, y);
 					return
 				   }else{
@@ -124,19 +122,17 @@ class Game extends React.Component {
 	    
 	  }.bind(this), 750);
   }
+   //this method kicks in to make a random play if the first computer method fails to take care of things
   _computerMove(){
 	if(calculateWinner(this.state.squares) === 'tie'){
 		return
 	}
 	setTimeout(function(){ 
-	  var squares = this.state.squares;
-	  console.log('in computer method');
 	  var x = Math.floor(Math.random() * 3);
 	  var y = Math.floor(Math.random() * 3);
 	  while( calculateWinner(this.state.squares) === false && this.state.squares[x][y] !== '-'){
 		  x = Math.floor(Math.random() * 3);
 		  y = Math.floor(Math.random() * 3);
-		  console.log('is this an infinite loop...?');
 	  }
 	    if(calculateWinner(this.state.squares)){
 			return
@@ -146,7 +142,7 @@ class Game extends React.Component {
 				return
 			
 	    
-	  }.bind(this), 750);
+	  }.bind(this), 50);
   }
   
   handleClick(i, j) {
@@ -183,7 +179,7 @@ class Game extends React.Component {
       status = (this.state.playerTurn ? 'Player turn' : '...thinking');
     }
 	if(this.state.playerTurn !== true){
-		this.computerMove();
+		this.computerMove(); //find a better place to call this method, not good to set state during render
 	}
     return (
 	<div className="row">
@@ -220,30 +216,27 @@ ReactDOM.render(
   <Game />,
   document.getElementById('root')
 );
+//helper method, calculates the game winner, or returns false if no one has clinched it yet
 function calculateWinner(squares, player) {
 	
 	  var status = (player ? 'better luck next time' : 'You won!');
 	  if (squares[0][0] === squares[1][1] && squares[0][0] === squares[2][2] && squares[0][0] !== '-') {
-			console.log('thats a diagonal win');
 			return status;
 	  }else if (squares[0][2] === squares[1][1] && squares[1][1] === squares[2][0] && squares[2][0] !== '-') {
-			console.log('thats a diagonal win');
 			return status;
 	  }
 	  for(var i = 0; i < squares.length; i++) {
 		if (squares[i][0] === squares[i][1] && squares[i][1] === squares[i][2] && squares[i][1] !== '-') {
-			console.log('thats a horizontal win');
 			return status;
 		}
 		if (squares[0][i] === squares[1][i] && squares[1][i] === squares[2][i] && squares[0][i] !== '-') {
-			console.log('thats a vertical win');
 			return status;
 		}
 	}
 	var spaces = false;
-	for (var i = 0; i <squares.length; i++) {
+	for (i = 0; i <squares.length; i++) {
         for(var j = 0; j < squares[i].length; j++){
-			if (squares[i][j] == '-'){
+			if (squares[i][j] === '-'){
 				spaces = true;
 			}
 		}
@@ -254,33 +247,6 @@ function calculateWinner(squares, player) {
 	  return false;
 	  
 }
-function potentialWinner(squares) {
-	  if (squares[0][0] === squares[1][1] && squares[0][0] === squares[2][2] && squares[0][0] !== '-') {
-			return true;
-	  }else if (squares[0][2] === squares[1][1] && squares[1][1] === squares[2][0] && squares[2][0] !== '-') {
-			return true;
-	  }
-	  for(var i = 0; i < squares.length; i++) {
-		if (squares[i][0] === squares[i][1] && squares[i][1] === squares[i][2] && squares[i][1] !== '-') {
-			return true;
-		}
-		if (squares[0][i] === squares[1][i] && squares[1][i] === squares[2][i] && squares[0][i] !== '-') {
-			return true;
-		}
-	}
-	var spaces = false;
-	for (var i = 0; i <squares.length; i++) {
-        for(var j = 0; j < squares[i].length; j++){
-			if (squares[i][j] == '-'){
-				spaces = true;
-			}
-		}
-	}
-	if(spaces === false){
-		return true;
-	}
-	  return false;
-	  
-}
+
 export default Game;
 
